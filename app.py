@@ -27,17 +27,35 @@ def connect():
 def hello_world():
     with con.cursor() as cursor:
         cursor.execute('select * from users')
-        result = cursor.fetchall()
-    return jsonify(result)
+        users = cursor.fetchall()
+        cursor.execute('select * from things')
+        things = cursor.fetchall()
+    return jsonify({
+        'users': users,
+        'things': things
+    })
 
 @app.route('/users/new', methods=['POST', 'GET'])
-def form():
+def create_user():
     if request.method == 'GET':
-        return render_template('form.html')
+        return render_template('user_form.html')
     elif request.method == 'POST':
         name = request.form['name']
         with con.cursor() as cursor:
-            sql='INSERT INTO users (name) VALUES (%s)'
+            sql='INSERT INTO `users` (`name`) VALUES (%s)'
             cursor.execute(sql, (name,))
+        con.commit()
+        return 'Thx'
+
+@app.route('/things/new', methods=['POST', 'GET'])
+def create_thing():
+    if request.method == 'GET':
+        return render_template('thing_form.html')
+    elif request.method == 'POST':
+        thing_name = request.form['thing']
+        vote = True if request.form['vote_y'] == 1 else False
+        with con.cursor() as cursor:
+            sql='INSERT INTO `things` (`thing`, `vote`) VALUES (%s, %s)'
+            cursor.execute(sql, (thing_name, vote))
         con.commit()
         return 'Thx'
