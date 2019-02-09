@@ -23,6 +23,12 @@ def connect():
     config = unlock()
     app.config
 
+def get_users(con):
+    with con.cursor() as cursor:
+        cursor.execute('select * from users')
+        users = cursor.fetchall()
+    return users
+
 @app.route('/')
 def hello_world():
     with con.cursor() as cursor:
@@ -50,12 +56,15 @@ def create_user():
 @app.route('/things/new', methods=['POST', 'GET'])
 def create_thing():
     if request.method == 'GET':
-        return render_template('thing_form.html')
+        users = get_users(con)
+        return render_template('thing_form.html', users=users)
     elif request.method == 'POST':
         thing_name = request.form['thing']
-        vote = True if request.form['vote_y'] == 1 else False
+        vote = True if request.form['vote'] == "1" else False
+        user_id = request.form['user-select']
+        user_id = int(user_id)
         with con.cursor() as cursor:
-            sql='INSERT INTO `things` (`thing`, `vote`) VALUES (%s, %s)'
-            cursor.execute(sql, (thing_name, vote))
+            sql='INSERT INTO `things` (`thing`, `vote`, `user_id`) VALUES (%s, %s, %s)'
+            cursor.execute(sql, (thing_name, vote, user_id))
         con.commit()
         return 'Thx'

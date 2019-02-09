@@ -4,10 +4,14 @@
   <form action="/things/new" method="POST">
     <label for="thing">Thing:</label>
     <input type="text" name="thing">
-    <label for="vote_y">Oh yes, I'm interested</label>
-    <input type="radio" name="vote_y" value="1">
-    <label for="vote_n">God no</label>
-    <input type="radio" name="vote_n" value="0">
+    <label for="user-select">Choose a user:</label>
+    <select name="user-select">
+      {% for user in users %}
+      <option value="{{ user.id }}">{{ user.name }}</option>
+      {% endfor %}
+    </select>
+    <input type="radio" name="vote" value="1">Oh yes
+    <input type="radio" name="vote" value="0">God no 
     <input type="submit" value="Enter">
   </form>
 </body>
