@@ -37,24 +37,20 @@ def hello_world():
         cursor.execute('select * from things')
         things = cursor.fetchall()
     sets = [
-        {'sets': ['Sushi'], 'size': 6},
-        {'sets': ['Pizza'], 'size': 6},
-        {'sets': ['Pizza', 'Sushi'], 'size': 12}
+        {'sets': ['Sushi'], 'size': 1},
+        {'sets': ['Pizza'], 'size': 1},
+        {'sets': ['Anthony'], 'size': 12},
+        {'sets': ['Vicky'], 'size': 12},
+        {'sets': ['Anthony', 'Vicky', 'Sushi'], 'size': 2},
+        {'sets': ['Anthony', 'Vicky'], 'size': 2},
+        {'sets': ['Anthony', 'Sushi'], 'size': 2},
+        {'sets': ['Vicky', 'Sushi'], 'size': 2},
+        {'sets': ['Anthony', 'Pizza'], 'size': 2}
     ]
-    # sets = [
-    #     {'sets': ['Sushi'], 'size': 1},
-    #     {'sets': ['Pizza'], 'size': 1},
-    #     {'sets': ['Anthony'], 'size': 12},
-    #     {'sets': ['Vicky'], 'size': 12},
-    #     {'sets': ['Anthony', 'Vicky', 'Sushi'], 'size': 2}
-    # ]
     return render_template(
-        'venn.html'
+        'venn.html', sets=sets
     )
-#   return jsonify({
-#        'users': users,
-#        'things': things
-#    })
+    
 
 @app.route('/users/new', methods=['POST', 'GET'])
 def create_user():
