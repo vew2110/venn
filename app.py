@@ -29,6 +29,39 @@ def get_users(con):
         users = cursor.fetchall()
     return users
 
+def map_data(users, things):
+    """Transform data from DB schema to venn.js format"""
+    res = []
+    overlap = {}
+    # Create the big user circles
+    for user in users:
+        res.append({'sets': [user['name']], 'size': 12})
+        # Identify user/thing pairs
+        user_things = [
+            t for t in things if t['user_id'] == user['id'] and t['vote'] == 1
+        ]
+        for ut in user_things:
+            # res.append({'sets': [user['name'], ut['thing']], 'size': 1})
+            # Create a list of things with potential overlap
+            if ut['id'] in overlap.keys():
+                # Update user count
+                old = overlap[ut['id']]
+                old.update(users=old['users'].append(user['name']))
+            else:
+                overlap[ut['id']] = {
+                    'thing': ut['thing'],
+                    'users': [user['name']]
+                }
+    # Identify user overlap
+    for o in overlap:
+        res.append({'sets': [o['thing']].extend(o['users']), 'size': 2})
+    # Create the small thing circles
+    for t in things:
+        res.append({'sets': [t['thing']], 'size': 1})
+
+
+    return res
+
 @app.route('/')
 def hello_world():
     with con.cursor() as cursor:
@@ -47,10 +80,14 @@ def hello_world():
         {'sets': ['Vicky', 'Sushi'], 'size': 2},
         {'sets': ['Anthony', 'Pizza'], 'size': 2}
     ]
-    return render_template(
-        'venn.html', sets=sets
-    )
-    
+    return jsonify({
+        'users': users,
+        'things': things
+    })
+    # return render_template(
+    #     'venn.html', sets=sets
+    # )
+
 
 @app.route('/users/new', methods=['POST', 'GET'])
 def create_user():
