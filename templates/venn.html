@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 </head>
 <body>
   <div id="venn"></div>
   <script src="https://d3js.org/d3.v4.min.js"></script>
-  <script src="../node_modules/venn.js/venn.js"></script>
-  <script src="venn.js"></script>
+  <script src="{{ url_for('static', filename='node_modules/venn.js/venn.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/venn.js') }}"></script>
 </body>
 </html>

@@ -36,10 +36,25 @@ def hello_world():
         users = cursor.fetchall()
         cursor.execute('select * from things')
         things = cursor.fetchall()
-    return jsonify({
-        'users': users,
-        'things': things
-    })
+    sets = [
+        {'sets': ['Sushi'], 'size': 6},
+        {'sets': ['Pizza'], 'size': 6},
+        {'sets': ['Pizza', 'Sushi'], 'size': 12}
+    ]
+    # sets = [
+    #     {'sets': ['Sushi'], 'size': 1},
+    #     {'sets': ['Pizza'], 'size': 1},
+    #     {'sets': ['Anthony'], 'size': 12},
+    #     {'sets': ['Vicky'], 'size': 12},
+    #     {'sets': ['Anthony', 'Vicky', 'Sushi'], 'size': 2}
+    # ]
+    return render_template(
+        'venn.html'
+    )
+#   return jsonify({
+#        'users': users,
+#        'things': things
+#    })
 
 @app.route('/users/new', methods=['POST', 'GET'])
 def create_user():
